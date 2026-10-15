@@ -1,44 +1,50 @@
 import type { Metadata } from "next";
-import { CtaBand, PageHero, SectionHeading, TestimonialGrid } from "@/components/site/sections";
+import { Audiences, PaintChips, SocialWork } from "@/components/site/home";
+import { CtaBand, PageHero, SectionHeading, ServiceGrid, TestimonialGrid } from "@/components/site/sections";
 import { Cover } from "@/components/ui/cover";
-import { getSettings, getTestimonials } from "@/lib/cms";
+import { getServices, getSettings, getTestimonials } from "@/lib/cms";
 
-export const metadata: Metadata = { title: "About" };
-
-const VALUES = [
-  { title: "Preparation first", body: "Most of a great finish happens before the first coat: filling, sanding and priming." },
-  { title: "Respect for your home", body: "Floors and furniture covered, daily tidy-ups and a full clean when we finish." },
-  { title: "Clear pricing", body: "Itemised quotes with no surprises. What we quote is what you pay." },
-];
+export const metadata: Metadata = {
+  title: "About",
+  description: "Kapid Painting Company is a painting and decorating business serving homes, businesses and new builds in The Gambia.",
+};
 
 export default async function AboutPage() {
-  const [settings, testimonials] = await Promise.all([getSettings(), getTestimonials()]);
+  const [settings, services, testimonials] = await Promise.all([getSettings(), getServices(), getTestimonials()]);
   return (
     <>
       <PageHero eyebrow="About us" title={settings.about_title} />
-      <section className="container-x grid items-center gap-12 py-16 md:grid-cols-2">
+      <section className="container-x section grid items-center gap-12 md:grid-cols-2">
         <div className="space-y-4 text-lg whitespace-pre-line text-ink/85">{settings.about_body}</div>
-        <Cover src={settings.about_image} alt="Our team at work" swatch="exterior" className="aspect-[4/3] w-full rounded-3xl" />
+        <Cover
+          src={settings.about_image}
+          alt={`The ${settings.company_name} team at work`}
+          className="aspect-[5/4] w-full rounded-[2rem]"
+          fallback={<PaintChips />}
+        />
       </section>
-      <section className="bg-sand/60 py-16">
-        <div className="container-x">
-          <SectionHeading eyebrow="How we work" title="The Kapid standard" />
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {VALUES.map((v, i) => (
-              <div key={v.title} className="card p-6">
-                <span className="font-display text-3xl text-accent-500">0{i + 1}</span>
-                <h3 className="mt-3 font-semibold">{v.title}</h3>
-                <p className="mt-2 text-sm text-muted">{v.body}</p>
-              </div>
-            ))}
-          </div>
+
+      <div className="bg-sand/60">
+        <Audiences />
+      </div>
+
+      <section aria-labelledby="about-services" className="container-x section">
+        <SectionHeading id="about-services" eyebrow="What we do" title="Our services" />
+        <div className="mt-10">
+          <ServiceGrid services={services} />
         </div>
       </section>
+
       {testimonials.length > 0 && (
-        <section className="container-x py-16">
+        <section className="container-x pb-16">
           <TestimonialGrid testimonials={testimonials.slice(0, 3)} />
         </section>
       )}
+
+      <section className="container-x pb-4">
+        <SocialWork settings={settings} headingLevel="h2" />
+      </section>
+
       <CtaBand />
     </>
   );

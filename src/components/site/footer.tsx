@@ -9,7 +9,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
       <div className="container-x grid gap-10 py-14 md:grid-cols-3">
         <div>
           <p className="font-display text-2xl text-white">{settings.company_name}</p>
-          <p className="mt-2 text-sm">{settings.tagline}</p>
+          <p className="mt-2 text-sm italic">“{settings.tagline}”</p>
           {settings.service_area && <p className="mt-4 text-sm">Serving {settings.service_area}</p>}
           <SocialLinks settings={settings} className="mt-5" />
         </div>
@@ -31,16 +31,19 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             </p>
           )}
           {settings.opening_hours && <p>{settings.opening_hours}</p>}
+          <Link href="/contact#quote" className="btn btn-primary btn-sm mt-3">
+            Get a free quote
+          </Link>
         </div>
-        <div className="space-y-2 text-sm">
+        <nav aria-label="Footer" className="space-y-2 text-sm">
           <p className="font-semibold text-white">Explore</p>
-          <Link href="/services" className="block hover:text-white">Services</Link>
-          <Link href="/projects" className="block hover:text-white">Projects</Link>
-          <Link href="/about" className="block hover:text-white">About</Link>
-          <Link href="/contact" className="block hover:text-white">Request a quote</Link>
-        </div>
+          <Link href="/services" className="block py-1 hover:text-white">Services</Link>
+          <Link href="/projects" className="block py-1 hover:text-white">Our work</Link>
+          <Link href="/about" className="block py-1 hover:text-white">About</Link>
+          <Link href="/contact" className="block py-1 hover:text-white">Contact</Link>
+        </nav>
       </div>
-      <div className="border-t border-white/10 py-5 text-center text-xs text-white/50">
+      <div className="border-t border-white/10 pt-5 pb-24 text-center text-xs text-white/60 md:pb-5">
         © {settings.company_name}. All rights reserved.
       </div>
     </footer>

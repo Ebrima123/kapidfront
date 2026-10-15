@@ -4,12 +4,13 @@ import type { FAQ, Service, SiteSettings, Testimonial } from "./types";
 export const DEFAULT_SETTINGS: SiteSettings = {
   company_name: "Kapid Painting Company",
   tagline: "Excellence isn't built in one coat",
-  hero_title: "For all the latest decorations.",
-  hero_subtitle: "Painting and decorating for homes, new builds and businesses across The Gambia, inside and out.",
+  hero_title: "Professional painting for homes, businesses and new builds",
+  hero_subtitle:
+    "Interior and exterior painting and decorative finishes across The Gambia. Tell us about your project and we'll prepare a free, itemised quote.",
   hero_image: null,
-  about_title: "Kapid Company, the only solution",
+  about_title: "About Kapid Painting Company",
   about_body:
-    "Kapid Painting Company is a Gambian painting and decorating team. From fresh interiors to the exterior finish on new multi-storey buildings, our crews bring careful prep, clean lines and the latest decorative styles to every job.\n\nExcellence isn't built in one coat, so we take the time to do it properly.",
+    "Kapid Painting Company is a painting and decorating business in The Gambia. We paint interiors and exteriors for homeowners, businesses and new-build projects, and offer decorative finishes for clients who want more than a plain wall.\n\nOur motto is simple: excellence isn't built in one coat.",
   about_image: null,
   phone: "",
   email: "",
@@ -37,8 +38,8 @@ const s = (id: number, title: string, icon: string, summary: string): Service =>
 
 export const DEFAULT_SERVICES: Service[] = [
   s(1, "Interior Painting", "brush", "Walls, ceilings, trim and doors with crisp lines and durable finishes."),
-  s(2, "Exterior & New Builds", "home", "Weather-resistant finishes for homes and new multi-storey buildings."),
-  s(3, "Decorative Finishes", "sparkles", "The latest decorative styles: feature walls, textures and accent colours."),
+  s(2, "Exterior & New Builds", "home", "Exterior painting for homes and finishing work on new buildings."),
+  s(3, "Decorative Finishes", "sparkles", "Feature walls, textures and accent colours for a distinctive look."),
 ];
 
 export const DEFAULT_TESTIMONIALS: Testimonial[] = [];

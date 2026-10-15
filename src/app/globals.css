@@ -17,15 +17,33 @@
   --color-brand-700: #1e3a5f;
   --color-brand-900: #122338;
 
+  /* 500 is for fills/illustration only; 600+ carry text or white text (WCAG AA ≥ 4.5:1) */
+  --color-accent-50: #fdf3ec;
   --color-accent-100: #fde6d9;
   --color-accent-400: #f08c5a;
   --color-accent-500: #e8743b;
-  --color-accent-600: #cf5d25;
+  --color-accent-600: #b8501f;
+  --color-accent-700: #a8481b;
 }
 
 body {
   background: var(--color-cream);
   color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @layer components {
@@ -36,7 +54,13 @@ body {
     @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 disabled:cursor-not-allowed disabled:opacity-60;
   }
   .btn-primary {
-    @apply bg-accent-500 text-white hover:bg-accent-600;
+    @apply bg-accent-600 text-white shadow-sm shadow-accent-700/20 hover:bg-accent-700;
+  }
+  .btn-outline {
+    @apply border-2 border-brand-700 text-brand-700 hover:bg-brand-700 hover:text-white;
+  }
+  .btn-lg {
+    @apply px-6 py-3 text-base;
   }
   .btn-dark {
     @apply bg-brand-700 text-white hover:bg-brand-900;
@@ -51,7 +75,8 @@ body {
     @apply px-3.5 py-1.5 text-xs;
   }
   .input {
-    @apply w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-muted/70 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 focus:outline-none;
+    /* 16px on phones so iOS doesn't zoom into focused fields */
+    @apply w-full rounded-lg border border-line bg-white px-3 py-2 text-base text-ink sm:text-sm placeholder:text-muted/70 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 focus:outline-none;
   }
   .label {
     @apply mb-1 block text-xs font-semibold tracking-wide text-muted uppercase;
@@ -60,7 +85,10 @@ body {
     @apply rounded-2xl border border-line bg-white;
   }
   .eyebrow {
-    @apply text-xs font-semibold tracking-[0.2em] text-accent-600 uppercase;
+    @apply text-xs font-semibold tracking-[0.2em] text-accent-700 uppercase;
+  }
+  .section {
+    @apply py-16 sm:py-20;
   }
 }
 

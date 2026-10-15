@@ -1,16 +1,17 @@
 import Link from "next/link";
 import { ArrowRight, Star } from "lucide-react";
-import { Cover } from "@/components/ui/cover";
+import { ProjectCard } from "@/components/site/project-card";
 import { ServiceIcon } from "@/components/ui/icon";
-import { label } from "@/lib/format";
 import type { FAQ, Project, Service, Testimonial } from "@/lib/types";
 
 export function SectionHeading({
+  id,
   eyebrow,
   title,
   intro,
   center = false,
 }: {
+  id?: string;
   eyebrow: string;
   title: string;
   intro?: string;
@@ -19,7 +20,9 @@ export function SectionHeading({
   return (
     <div className={`max-w-2xl ${center ? "mx-auto text-center" : ""}`}>
       <p className="eyebrow">{eyebrow}</p>
-      <h2 className="mt-3 font-display text-3xl font-semibold text-balance sm:text-4xl">{title}</h2>
+      <h2 id={id} className="mt-3 font-display text-3xl font-semibold text-balance sm:text-4xl">
+        {title}
+      </h2>
       {intro && <p className="mt-4 text-muted">{intro}</p>}
     </div>
   );
@@ -28,7 +31,7 @@ export function SectionHeading({
 export function PageHero({ eyebrow, title, intro }: { eyebrow: string; title: string; intro?: string }) {
   return (
     <section className="border-b border-line bg-sand/60">
-      <div className="container-x py-16 sm:py-20">
+      <div className="container-x py-12 sm:py-16">
         <p className="eyebrow">{eyebrow}</p>
         <h1 className="mt-3 max-w-3xl font-display text-4xl font-semibold text-balance sm:text-5xl">{title}</h1>
         {intro && <p className="mt-4 max-w-2xl text-lg text-muted">{intro}</p>}
@@ -65,25 +68,13 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
     return <p className="text-muted">New projects are coming soon.</p>;
   }
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
       {projects.map((p) => (
-        <Link key={p.id} href={`/projects/${p.slug}`} className="group">
-          <div className="overflow-hidden rounded-2xl">
-            <Cover
-              src={p.cover_image}
-              alt={p.title}
-              swatch={p.category}
-              className="aspect-[4/3] w-full transition duration-500 group-hover:scale-105"
-            />
-          </div>
-          <p className="mt-3 text-xs font-semibold tracking-wide text-accent-600 uppercase">
-            {label(p.category)}
-            {p.location && <span className="text-muted"> · {p.location}</span>}
-          </p>
-          <h3 className="mt-1 font-semibold group-hover:text-brand-600">{p.title}</h3>
-        </Link>
+        <li key={p.id}>
+          <ProjectCard project={p} />
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
 
@@ -115,7 +106,7 @@ export function FaqList({ faqs }: { faqs: FAQ[] }) {
         <details key={f.id} className="group p-5">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
             {f.question}
-            <span className="text-accent-500 transition group-open:rotate-45">+</span>
+            <span aria-hidden className="text-xl leading-none text-accent-700 transition group-open:rotate-45">+</span>
           </summary>
           <p className="mt-3 text-muted">{f.answer}</p>
         </details>
@@ -128,14 +119,14 @@ export function CtaBand() {
   return (
     <section className="container-x py-16">
       <div className="relative overflow-hidden rounded-3xl bg-brand-700 px-6 py-12 text-white sm:px-12">
-        <div className="absolute -top-16 -right-16 size-64 rounded-full bg-accent-500/30 blur-2xl" />
+        <div aria-hidden className="absolute -top-16 -right-16 size-64 rounded-full bg-accent-500/30 blur-2xl" />
         <div className="relative flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div>
             <h2 className="font-display text-3xl font-semibold">Ready for a fresh coat?</h2>
-            <p className="mt-2 text-white/75">Tell us about your project and get a free, no-obligation quote.</p>
+            <p className="mt-2 text-white/80">Tell us about your project and we&apos;ll send you a free, itemised quote.</p>
           </div>
-          <Link href="/contact#quote" className="btn btn-primary">
-            Request a free quote <ArrowRight className="size-4" />
+          <Link href="/contact#quote" className="btn btn-primary btn-lg shrink-0">
+            Get a free quote <ArrowRight className="size-4" aria-hidden />
           </Link>
         </div>
       </div>

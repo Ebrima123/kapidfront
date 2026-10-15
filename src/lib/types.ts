@@ -31,7 +31,7 @@ export type Service = {
   is_published: boolean;
 };
 
-export type ProjectCategory = "interior" | "exterior" | "commercial" | "cabinets" | "other";
+export type ProjectCategory = "interior" | "exterior" | "commercial" | "new_build" | "cabinets" | "other";
 
 export type ProjectImage = { id: number; project: number; image: string; caption: string; order: number };
 
@@ -42,6 +42,7 @@ export type Project = {
   category: ProjectCategory;
   location: string;
   description: string;
+  scope_of_work: string;
   cover_image: string | null;
   completed_on: string | null;
   is_featured: boolean;

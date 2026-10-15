@@ -1,14 +1,34 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CtaBand, PageHero } from "@/components/site/sections";
+import { ArrowLeft, ArrowRight, Calendar, Camera, Check, ChevronRight, MapPin, Tag } from "lucide-react";
+import { PaintChips } from "@/components/site/home";
+import { PhotoGallery } from "@/components/site/photo-gallery";
+import { ProjectCard } from "@/components/site/project-card";
 import { Cover } from "@/components/ui/cover";
-import { getProject } from "@/lib/cms";
-import { date, label } from "@/lib/format";
+import { getProject, getProjects } from "@/lib/cms";
+import { date } from "@/lib/format";
+import { categoryLabel, coverAlt, coverOf, photosOf, quoteHrefFor, scopeItems } from "@/lib/projects";
+
+export async function generateMetadata({ params }: PageProps<"/projects/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const p = await getProject(slug);
+  if (!p) return { title: "Project not found" };
+  const cover = coverOf(p);
+  const description =
+    p.description.split("\n")[0].slice(0, 160) ||
+    `${categoryLabel(p.category)} painting project by Kapid Painting Company${p.location ? ` in ${p.location}` : ""}.`;
+  return {
+    title: p.title,
+    description,
+    openGraph: { title: p.title, description, images: cover ? [{ url: cover, alt: coverAlt(p) }] : undefined },
+  };
+}
 
 export default function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
   return (
-    <Suspense fallback={<div className="container-x py-24 text-muted">Loading…</div>}>
+    <Suspense fallback={<div className="container-x py-24 text-muted">Loading project…</div>}>
       <ProjectDetail params={params} />
     </Suspense>
   );
@@ -16,58 +36,189 @@ export default function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
 
 async function ProjectDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const project = await getProject(slug);
+  const [project, all] = await Promise.all([getProject(slug), getProjects()]);
   if (!project) notFound();
 
+  const p = project;
+  const cover = coverOf(p);
+  const photos = photosOf(p);
+  const scope = scopeItems(p);
+  const type = categoryLabel(p.category);
+
+  const position = all.findIndex((x) => x.id === p.id);
+  const prev = position > 0 ? all[position - 1] : null;
+  const next = position >= 0 && position < all.length - 1 ? all[position + 1] : null;
+  const sameType = all.filter((x) => x.id !== p.id && x.category === p.category);
+  const related = (sameType.length > 0 ? sameType : all.filter((x) => x.id !== p.id)).slice(0, 3);
+
+  const facts = [
+    { icon: Tag, term: "Project type", value: type },
+    p.location && { icon: MapPin, term: "Location", value: p.location },
+    p.completed_on && { icon: Calendar, term: "Completed", value: date(p.completed_on) },
+    photos.length > 0 && { icon: Camera, term: "Photos", value: String(photos.length) },
+  ].filter(Boolean) as { icon: typeof Tag; term: string; value: string }[];
+
   return (
-    <>
-      <PageHero
-        eyebrow={`${label(project.category)}${project.location ? ` · ${project.location}` : ""}`}
-        title={project.title}
-      />
-      <section className="container-x py-12">
-        <Cover
-          src={project.cover_image}
-          alt={project.title}
-          swatch={project.category}
-          className="aspect-[16/8] w-full rounded-3xl"
-        />
-        <div className="mt-10 grid gap-10 md:grid-cols-[2fr_1fr]">
-          <p className="whitespace-pre-line text-ink/85">{project.description}</p>
-          <dl className="card h-fit space-y-3 p-6 text-sm">
-            <div className="flex justify-between">
-              <dt className="text-muted">Category</dt>
-              <dd className="font-medium">{label(project.category)}</dd>
-            </div>
-            {project.location && (
-              <div className="flex justify-between">
-                <dt className="text-muted">Location</dt>
-                <dd className="font-medium">{project.location}</dd>
-              </div>
-            )}
-            {project.completed_on && (
-              <div className="flex justify-between">
-                <dt className="text-muted">Completed</dt>
-                <dd className="font-medium">{date(project.completed_on)}</dd>
-              </div>
-            )}
-          </dl>
-        </div>
-        {project.images.length > 0 && (
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {project.images.map((img) => (
-              <figure key={img.id}>
-                <Cover src={img.image} alt={img.caption || project.title} className="aspect-square w-full rounded-2xl" />
-                {img.caption && <figcaption className="mt-2 text-sm text-muted">{img.caption}</figcaption>}
-              </figure>
+    <article>
+      <div className="border-b border-line bg-sand/60">
+        <div className="container-x pt-6 pb-10 sm:pb-12">
+          <nav aria-label="Breadcrumb" className="text-sm text-muted">
+            <ol className="flex flex-wrap items-center gap-1">
+              <li>
+                <Link href="/projects" className="inline-flex items-center gap-1 py-1.5 font-medium text-ink hover:text-accent-700">
+                  <ArrowLeft className="size-4" aria-hidden /> All projects
+                </Link>
+              </li>
+              <li aria-hidden>
+                <ChevronRight className="size-3.5" />
+              </li>
+              <li>
+                <Link href={`/projects?type=${p.category}`} className="inline-block py-1.5 hover:text-accent-700">
+                  {type}
+                </Link>
+              </li>
+            </ol>
+          </nav>
+          <h1 className="mt-5 max-w-3xl font-display text-4xl font-semibold text-balance sm:text-5xl">{p.title}</h1>
+          <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink/80">
+            {facts.map(({ icon: Icon, term, value }) => (
+              <li key={term} className="flex items-center gap-1.5">
+                <Icon className="size-4 text-accent-700" aria-hidden />
+                <span className="sr-only">{term}:</span> {value}
+              </li>
             ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="container-x pt-8 sm:pt-10">
+        <Cover
+          src={cover}
+          alt={coverAlt(p)}
+          priority
+          sizes="(min-width: 1152px) 1104px, 100vw"
+          className="aspect-[4/3] w-full rounded-3xl sm:aspect-[16/8]"
+          fallback={
+            <div className="relative">
+              <PaintChips />
+              <p className="absolute inset-x-0 bottom-5 text-center text-sm font-medium text-ink/80">
+                Photos of this project will be added soon.
+              </p>
+            </div>
+          }
+        />
+      </div>
+
+      <div className="container-x section grid gap-12 pt-10 lg:grid-cols-[1fr_20rem]">
+        <div className="min-w-0 space-y-12">
+          {p.description && (
+            <section aria-labelledby="about-project">
+              <h2 id="about-project" className="font-display text-2xl font-semibold">About this project</h2>
+              <div className="mt-4 max-w-prose text-lg whitespace-pre-line text-ink/85">{p.description}</div>
+            </section>
+          )}
+
+          {scope.length > 0 && (
+            <section aria-labelledby="work-done">
+              <h2 id="work-done" className="font-display text-2xl font-semibold">Work carried out</h2>
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {scope.map((item) => (
+                  <li key={item} className="flex items-start gap-3 rounded-xl border border-line bg-white px-4 py-3">
+                    <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-accent-600 text-white">
+                      <Check className="size-3" aria-hidden />
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {!p.description && scope.length === 0 && (
+            <p className="rounded-xl border border-dashed border-line px-5 py-4 text-muted">
+              A full write-up of this {type.toLowerCase()} project is on its way. Ask us about it when you request your
+              quote.
+            </p>
+          )}
+
+          {photos.length > 1 && (
+            <section aria-labelledby="project-photos">
+              <h2 id="project-photos" className="font-display text-2xl font-semibold">
+                Photos <span className="text-base font-normal text-muted">({photos.length})</span>
+              </h2>
+              <div className="mt-4">
+                <PhotoGallery photos={photos} title={p.title} />
+              </div>
+            </section>
+          )}
+        </div>
+
+        <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
+          <div className="rounded-2xl bg-brand-900 p-6 text-white">
+            <h2 className="font-display text-xl font-semibold">Planning a similar project?</h2>
+            <p className="mt-2 text-sm text-white/80">
+              Tell us about your {type.toLowerCase()} job and we&apos;ll send you a free, itemised quote.
+            </p>
+            <Link href={quoteHrefFor(p)} className="btn btn-primary mt-5 w-full">
+              Get a free quote <ArrowRight className="size-4" aria-hidden />
+            </Link>
           </div>
-        )}
-        <Link href="/projects" className="mt-12 inline-block text-sm font-semibold text-brand-600 hover:underline">
-          ← Back to all projects
-        </Link>
-      </section>
-      <CtaBand />
-    </>
+          {/* Facts already sit under the title; repeat them beside the content only on wide screens */}
+          <dl className="card hidden divide-y divide-line px-5 text-sm lg:block">
+            {facts.map(({ term, value }) => (
+              <div key={term} className="flex justify-between gap-4 py-3">
+                <dt className="text-muted">{term}</dt>
+                <dd className="text-right font-medium">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </aside>
+      </div>
+
+      {(prev || next) && (
+        <nav aria-label="More projects" className="container-x">
+          <div className="grid gap-3 border-y border-line py-6 sm:grid-cols-2">
+            {prev ? (
+              <Link href={`/projects/${prev.slug}`} className="group rounded-xl p-3 hover:bg-sand">
+                <span className="flex items-center gap-1 text-xs font-semibold tracking-wide text-muted uppercase">
+                  <ArrowLeft className="size-3.5" aria-hidden /> Previous project
+                </span>
+                <span className="mt-1 block font-semibold group-hover:text-accent-700">{prev.title}</span>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {next && (
+              <Link href={`/projects/${next.slug}`} className="group rounded-xl p-3 text-right hover:bg-sand">
+                <span className="flex items-center justify-end gap-1 text-xs font-semibold tracking-wide text-muted uppercase">
+                  Next project <ArrowRight className="size-3.5" aria-hidden />
+                </span>
+                <span className="mt-1 block font-semibold group-hover:text-accent-700">{next.title}</span>
+              </Link>
+            )}
+          </div>
+        </nav>
+      )}
+
+      {related.length > 0 && (
+        <section aria-labelledby="related-heading" className="container-x section">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <h2 id="related-heading" className="font-display text-2xl font-semibold sm:text-3xl">
+              {sameType.length > 0 ? `More ${type.toLowerCase()} projects` : "More of our work"}
+            </h2>
+            <Link href="/projects" className="inline-block py-1.5 text-sm font-semibold text-accent-700 hover:underline">
+              View all projects <span aria-hidden>→</span>
+            </Link>
+          </div>
+          <ul className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((r) => (
+              <li key={r.id}>
+                <ProjectCard project={r} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </article>
   );
 }

@@ -1,7 +1,7 @@
 import type { SiteSettings } from "@/lib/types";
 
 // lucide-react ships no brand logos, so these are minimal inline marks.
-const ICONS = {
+export const SOCIAL_ICONS = {
   facebook: (
     <path d="M14 8.5V6.8c0-.8.2-1.3 1.4-1.3H17V2.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v1.9H8v3.2h2.6V21H14v-9.3h2.6l.4-3.2H14Z" />
   ),
@@ -14,9 +14,9 @@ const ICONS = {
 };
 
 const NETWORKS = [
-  { key: "facebook_url", label: "Facebook", icon: ICONS.facebook },
-  { key: "tiktok_url", label: "TikTok", icon: ICONS.tiktok },
-  { key: "instagram_url", label: "Instagram", icon: ICONS.instagram },
+  { key: "facebook_url", label: "Facebook", icon: SOCIAL_ICONS.facebook },
+  { key: "tiktok_url", label: "TikTok", icon: SOCIAL_ICONS.tiktok },
+  { key: "instagram_url", label: "Instagram", icon: SOCIAL_ICONS.instagram },
 ] as const;
 
 export function SocialLinks({ settings, className = "" }: { settings: SiteSettings; className?: string }) {

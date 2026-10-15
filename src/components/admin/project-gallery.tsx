@@ -59,20 +59,41 @@ export function ProjectGallery({ projectId }: { projectId: number }) {
       {images.length === 0 ? (
         <p className="text-sm text-muted">No gallery photos yet.</p>
       ) : (
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-          {images.map((img) => (
-            <div key={img.id} className="group relative">
-              <img src={img.image} alt={img.caption} className="aspect-square w-full rounded-lg object-cover" />
-              <button
-                onClick={() => remove(img.id)}
-                className="absolute top-1 right-1 rounded-md bg-white/90 p-1 text-red-600 opacity-0 shadow group-hover:opacity-100"
-                aria-label="Remove photo"
-              >
-                <Trash2 className="size-3.5" />
-              </button>
-            </div>
-          ))}
-        </div>
+        <>
+          <p className="mb-2 text-xs text-muted">
+            Add a short caption to each photo (e.g. “Living room after painting”). Captions are shown on the site and
+            read aloud by screen readers.
+          </p>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {images.map((img, i) => (
+              <div key={img.id} className="group">
+                <div className="relative">
+                  <img src={img.image} alt={img.caption} className="aspect-square w-full rounded-lg object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => remove(img.id)}
+                    className="absolute top-1 right-1 rounded-md bg-white/90 p-1 text-red-600 shadow sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100"
+                    aria-label={`Remove photo ${i + 1}`}
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
+                </div>
+                <input
+                  className="input mt-1.5 px-2 py-1 text-xs"
+                  defaultValue={img.caption}
+                  placeholder="Caption"
+                  aria-label={`Caption for photo ${i + 1}`}
+                  onBlur={(e) => {
+                    const caption = e.target.value.trim();
+                    if (caption !== img.caption) {
+                      api(`cms/project-images/${img.id}`, { method: "PATCH", json: { caption } }).then(reload);
+                    }
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
