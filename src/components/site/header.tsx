@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
-import { ArrowRight, Menu, PaintRoller, Phone, X } from "lucide-react";
+import { Suspense, useEffect, useState } from "react";
+import { PaintRoller, Phone } from "lucide-react";
 import { WhatsAppIcon } from "./whatsapp";
 
 const NAV = [
@@ -13,18 +13,19 @@ const NAV = [
   { href: "/contact", label: "Contact" },
 ];
 
-function NavLinks({ pathname, onNavigate, mobile = false }: { pathname: string; onNavigate?: () => void; mobile?: boolean }) {
+function NavLinks({ pathname, mobile = false }: { pathname: string; mobile?: boolean }) {
   return NAV.map((item) => {
     const active = pathname.startsWith(item.href);
     return (
       <Link
         key={item.href}
         href={item.href}
-        onClick={onNavigate}
         aria-current={active ? "page" : undefined}
         className={
           mobile
-            ? `flex items-center justify-between border-b border-line py-4 font-display text-2xl ${active ? "text-accent-700" : "text-brand-900"}`
+            ? `relative shrink-0 py-3 text-[15px] font-medium transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 ${
+                active ? "text-white after:bg-accent-500" : "text-white/75 after:bg-transparent hover:text-white"
+              }`
             : `relative px-3 py-2 text-[15px] font-medium transition-colors after:absolute after:inset-x-3 after:-bottom-[23px] after:h-0.5 after:transition-colors ${
                 active
                   ? "text-brand-900 after:bg-accent-600"
@@ -33,13 +34,12 @@ function NavLinks({ pathname, onNavigate, mobile = false }: { pathname: string; 
         }
       >
         {item.label}
-        {mobile && <ArrowRight className="size-5 text-muted" aria-hidden />}
       </Link>
     );
   });
 }
 
-function ActiveNavLinks(props: { onNavigate?: () => void; mobile?: boolean }) {
+function ActiveNavLinks(props: { mobile?: boolean }) {
   return <NavLinks pathname={usePathname()} {...props} />;
 }
 
@@ -70,21 +70,9 @@ export function Logo({ name, inverted = false }: { name: string; inverted?: bool
 }
 
 export function Header({ companyName, phone }: { companyName: string; phone?: string }) {
-  const [open, setOpen] = useState(false);
-  const menuButton = useRef<HTMLButtonElement>(null);
-  const close = () => setOpen(false);
-
   return (
-    <header
-      className="sticky top-0 z-40 border-b border-line bg-paper"
-      onKeyDown={(e) => {
-        if (e.key === "Escape" && open) {
-          close();
-          menuButton.current?.focus();
-        }
-      }}
-    >
-      <div className="container-x flex h-[72px] items-center justify-between gap-6">
+    <header className="sticky top-0 z-40 border-b border-line bg-paper">
+      <div className="container-x flex h-16 items-center justify-between gap-6 md:h-[72px]">
         <Link href="/" aria-label={`${companyName}, home`} className="rounded-[5px]">
           <Logo name={companyName} />
         </Link>
@@ -106,37 +94,16 @@ export function Header({ companyName, phone }: { companyName: string; phone?: st
             Get a free quote
           </Link>
         </div>
-
-        <button
-          ref={menuButton}
-          type="button"
-          className="-mr-2 grid size-11 place-items-center rounded-[5px] text-brand-900 md:hidden"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          onClick={() => setOpen((o) => !o)}
-        >
-          {open ? <X className="size-6" /> : <Menu className="size-6" />}
-        </button>
       </div>
 
-      {open && (
-        <nav id="mobile-menu" aria-label="Main" className="border-t border-line bg-paper md:hidden">
-          <div className="container-x flex flex-col pb-6">
-            <Suspense fallback={<NavLinks pathname="" onNavigate={close} mobile />}>
-              <ActiveNavLinks onNavigate={close} mobile />
-            </Suspense>
-            {phone && (
-              <a href={`tel:${phone}`} className="flex items-center gap-2 py-4 font-semibold text-brand-900">
-                <Phone className="size-4 text-accent-600" aria-hidden /> Call {phone}
-              </a>
-            )}
-            <Link href="/contact#quote" onClick={close} className="btn btn-primary btn-lg mt-5">
-              Get a free quote
-            </Link>
-          </div>
-        </nav>
-      )}
+      {/* Phones: the links sit in their own row under the logo instead of a collapsible menu */}
+      <nav aria-label="Main" className="bg-brand-900 md:hidden">
+        <div className="container-x flex justify-between gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <Suspense fallback={<NavLinks pathname="" mobile />}>
+            <ActiveNavLinks mobile />
+          </Suspense>
+        </div>
+      </nav>
     </header>
   );
 }

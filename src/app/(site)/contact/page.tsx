@@ -46,7 +46,7 @@ export default async function ContactPage() {
 
       <section
         id="quote"
-        className="container-x grid scroll-mt-24 gap-12 py-10 sm:py-14 lg:grid-cols-[1.7fr_1fr] lg:gap-16"
+        className="container-x grid scroll-mt-32 gap-12 py-10 md:scroll-mt-24 sm:py-14 lg:grid-cols-[1.7fr_1fr] lg:gap-16"
       >
         <div className="card p-4 sm:p-8 lg:p-10">
           <Suspense>
