@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Footer } from "@/components/site/footer";
 import { Header, MobileQuoteBar } from "@/components/site/header";
 import { TopBar } from "@/components/site/top-bar";
@@ -24,7 +25,10 @@ export default async function SiteLayout({ children }: LayoutProps<"/">) {
         {children}
       </main>
       <Footer settings={settings} />
-      <MobileQuoteBar phone={settings.phone} whatsappHref={whatsapp} />
+      {/* Reads the URL (hidden on /contact), so it renders after the static shell */}
+      <Suspense fallback={null}>
+        <MobileQuoteBar phone={settings.phone} whatsappHref={whatsapp} />
+      </Suspense>
       <WhatsAppFloat href={whatsapp} companyName={settings.company_name} />
     </>
   );

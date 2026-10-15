@@ -143,6 +143,8 @@ export function Header({ companyName, phone }: { companyName: string; phone?: st
 
 /** Always-visible contact actions on small screens: call, WhatsApp and the quote form. */
 export function MobileQuoteBar({ phone, whatsappHref }: { phone?: string; whatsappHref?: string | null }) {
+  // Not shown on the contact page, which is the quote form itself.
+  const onContactPage = usePathname().startsWith("/contact");
   // Hide once the footer's "Get in touch" section is on screen: it offers the same actions.
   const [hidden, setHidden] = useState(false);
   useEffect(() => {
@@ -158,6 +160,8 @@ export function MobileQuoteBar({ phone, whatsappHref }: { phone?: string; whatsa
       window.removeEventListener("resize", update);
     };
   }, []);
+
+  if (onContactPage) return null;
 
   return (
     <div
