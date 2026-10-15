@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  --color-cream: #faf7f2;
+  --color-sand: #f1ebe1;
+  --color-ink: #1b2430;
+  --color-muted: #5d6673;
+  --color-line: #e4ddd2;
+
+  --color-brand-50: #eef4fa;
+  --color-brand-100: #d6e4f2;
+  --color-brand-500: #2f5d8a;
+  --color-brand-600: #244b72;
+  --color-brand-700: #1e3a5f;
+  --color-brand-900: #122338;
+
+  --color-accent-100: #fde6d9;
+  --color-accent-400: #f08c5a;
+  --color-accent-500: #e8743b;
+  --color-accent-600: #cf5d25;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply bg-accent-500 text-white hover:bg-accent-600;
+  }
+  .btn-dark {
+    @apply bg-brand-700 text-white hover:bg-brand-900;
+  }
+  .btn-ghost {
+    @apply border border-line bg-white text-ink hover:bg-sand;
+  }
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700;
+  }
+  .btn-sm {
+    @apply px-3.5 py-1.5 text-xs;
+  }
+  .input {
+    @apply w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-muted/70 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 focus:outline-none;
+  }
+  .label {
+    @apply mb-1 block text-xs font-semibold tracking-wide text-muted uppercase;
+  }
+  .card {
+    @apply rounded-2xl border border-line bg-white;
+  }
+  .eyebrow {
+    @apply text-xs font-semibold tracking-[0.2em] text-accent-600 uppercase;
+  }
+}
+
+/* Paint-swatch placeholder used when CMS items have no image yet */
+.swatch-interior { background: linear-gradient(135deg, #e9dfd0, #c8b79e); }
+.swatch-exterior { background: linear-gradient(135deg, #b9cfe3, #2f5d8a); }
+.swatch-commercial { background: linear-gradient(135deg, #d5d9de, #5d6673); }
+.swatch-cabinets { background: linear-gradient(135deg, #f6d8c4, #e8743b); }
+.swatch-other { background: linear-gradient(135deg, #e4ddd2, #1e3a5f); }
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+}
