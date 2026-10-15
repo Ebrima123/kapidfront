@@ -8,6 +8,7 @@ export type SiteSettings = {
   about_body: string;
   about_image: string | null;
   phone: string;
+  whatsapp_number: string;
   email: string;
   address: string;
   service_area: string;

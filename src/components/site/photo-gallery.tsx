@@ -31,7 +31,7 @@ export function PhotoGallery({ photos, title }: { photos: Photo[]; title: string
             <button
               type="button"
               onClick={() => setIndex(i)}
-              className="group relative block aspect-square w-full overflow-hidden rounded-xl bg-sand"
+              className="group relative block aspect-square w-full overflow-hidden rounded-[5px] bg-sand"
               aria-label={`Open photo ${i + 1} of ${photos.length}${p.caption ? `: ${p.caption}` : ""}`}
             >
               <Image
@@ -43,7 +43,7 @@ export function PhotoGallery({ photos, title }: { photos: Photo[]; title: string
                 unoptimized={isLocal(p.image)}
                 className="object-cover transition duration-500 group-hover:scale-105"
               />
-              <span className="absolute right-2 bottom-2 grid size-8 place-items-center rounded-full bg-white/90 text-ink opacity-0 shadow transition group-hover:opacity-100 group-focus-visible:opacity-100">
+              <span className="absolute right-2 bottom-2 grid size-8 place-items-center rounded-[3px] bg-paper/95 text-ink opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
                 <Expand className="size-4" aria-hidden />
               </span>
             </button>

@@ -6,15 +6,15 @@ export const metadata: Metadata = { title: "Page not found", robots: { index: fa
 export default function NotFound() {
   return (
     <main id="main" className="grid flex-1 place-items-center px-4 py-24 text-center">
-      <div>
-        <p className="eyebrow">404</p>
-        <h1 className="mt-3 font-display text-4xl font-semibold">This wall is still blank</h1>
-        <p className="mt-3 text-muted">We couldn&apos;t find the page you were looking for.</p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/" className="btn btn-primary">
-            Back home
+      <div className="max-w-xl">
+        <p className="eyebrow justify-center">Error 404</p>
+        <h1 className="heading-xl mt-6">This wall is still blank</h1>
+        <p className="lede mt-5">We couldn&apos;t find the page you were looking for.</p>
+        <div className="mt-9 flex flex-wrap justify-center gap-3">
+          <Link href="/" className="btn btn-primary btn-lg">
+            Back to the homepage
           </Link>
-          <Link href="/contact#quote" className="btn btn-outline">
+          <Link href="/contact#quote" className="btn btn-outline btn-lg">
             Get a free quote
           </Link>
         </div>

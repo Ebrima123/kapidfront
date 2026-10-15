@@ -13,6 +13,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     "Kapid Painting Company is a painting and decorating business in The Gambia. We paint interiors and exteriors for homeowners, businesses and new-build projects, and offer decorative finishes for clients who want more than a plain wall.\n\nOur motto is simple: excellence isn't built in one coat.",
   about_image: null,
   phone: "",
+  whatsapp_number: "",
   email: "",
   address: "",
   service_area: "The Gambia",

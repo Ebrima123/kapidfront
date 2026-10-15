@@ -33,6 +33,13 @@ const GROUPS: { title: string; fields: FieldDef[] }[] = [
     title: "Contact details",
     fields: [
       { name: "phone", label: "Phone" },
+      {
+        name: "whatsapp_number",
+        label: "WhatsApp number",
+        type: "tel",
+        placeholder: "+220 123 4567",
+        help: "Include the country code. Shows a WhatsApp chat button across the website; leave blank to hide it.",
+      },
       { name: "email", label: "Email", type: "email" },
       { name: "address", label: "Address", full: true },
       { name: "service_area", label: "Service area", placeholder: "e.g. the city and surrounding areas" },

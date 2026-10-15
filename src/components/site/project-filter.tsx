@@ -49,7 +49,7 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
             >
               {o.label}
               <span
-                className={`rounded-full px-1.5 text-[11px] ${active === o.value ? "bg-white/20" : "bg-sand text-muted"}`}
+                className={`rounded-[3px] px-1.5 text-[11px] ${active === o.value ? "bg-white/20" : "bg-sand text-muted"}`}
               >
                 {o.count}
               </span>

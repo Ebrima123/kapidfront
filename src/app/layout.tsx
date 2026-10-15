@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Inter, Newsreader } from "next/font/google";
+import Script from "next/script";
+import { REVEAL_BOOT_SCRIPT } from "@/lib/reveal";
 import { SITE_URL } from "@/lib/config";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
-const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"] });
+// Editorial serif for headlines; Inter carries body copy and interface text.
+const newsreader = Newsreader({ variable: "--font-newsreader", subsets: ["latin"], axes: ["opsz"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -16,8 +19,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${fraunces.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col font-sans">{children}</body>
+    // The public site's reveal script adds a class to <html> before hydration.
+    <html lang="en" className={`${inter.variable} ${newsreader.variable} h-full antialiased`} suppressHydrationWarning>
+      <body className="flex min-h-full flex-col font-sans">
+        {/* Hides scroll-reveal content before first paint; undone after 3s if the public site's observer never starts. */}
+        <Script id="reveal-boot" strategy="beforeInteractive">
+          {REVEAL_BOOT_SCRIPT}
+        </Script>
+        {children}
+      </body>
     </html>
   );
 }

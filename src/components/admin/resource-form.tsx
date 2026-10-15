@@ -11,7 +11,7 @@ export type Option = { value: string; label: string };
 export type FieldDef = {
   name: string;
   label: string;
-  type?: "text" | "email" | "url" | "textarea" | "number" | "money" | "date" | "select" | "checkbox" | "image" | "relation";
+  type?: "text" | "email" | "tel" | "url" | "textarea" | "number" | "money" | "date" | "select" | "checkbox" | "image" | "relation";
   options?: Option[];
   /** For type "relation": endpoint to load choices from, and how to label each row. */
   relation?: { endpoint: string; label: (row: Record<string, unknown>) => string };

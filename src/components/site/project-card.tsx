@@ -10,33 +10,33 @@ export function ProjectCard({ project: p, headingLevel: H = "h3" }: { project: P
   return (
     <Link
       href={`/projects/${p.slug}`}
-      className="group block rounded-2xl focus-visible:outline-offset-4"
+      className="group block rounded-md focus-visible:outline-offset-4"
     >
-      <div className="relative overflow-hidden rounded-2xl">
+      <div className="relative overflow-hidden rounded-md">
         <Cover
           src={cover}
           alt={coverAlt(p)}
           swatch={p.category}
           className="aspect-[4/3] w-full"
-          imgClassName="transition duration-500 group-hover:scale-105"
+          imgClassName="transition duration-700 group-hover:scale-[1.03]"
           fallback={
             <div className={`swatch-${p.category} grid aspect-[4/3] w-full place-items-center`}>
-              <span className="flex items-center gap-1.5 rounded-full bg-white/85 px-3 py-1 text-xs font-medium text-ink">
+              <span className="flex items-center gap-1.5 rounded-[3px] bg-paper/90 px-3 py-1.5 text-xs font-medium text-ink">
                 <ImageOff className="size-3.5" aria-hidden /> Photos coming soon
               </span>
             </div>
           }
         />
-        <span className="absolute top-3 left-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-ink shadow-sm">
+        <span className="absolute top-3 left-3 rounded-[3px] bg-paper px-2.5 py-1 text-[11px] font-semibold tracking-[0.12em] text-brand-900 uppercase">
           {categoryLabel(p.category)}
         </span>
         {photos > 1 && (
-          <span className="absolute right-3 bottom-3 flex items-center gap-1 rounded-full bg-ink/75 px-2.5 py-1 text-xs font-medium text-white">
+          <span className="absolute right-3 bottom-3 flex items-center gap-1 rounded-[3px] bg-brand-950/80 px-2.5 py-1 text-xs font-medium text-white">
             <Camera className="size-3.5" aria-hidden /> {photos} photos
           </span>
         )}
       </div>
-      <H className="mt-3 font-semibold text-balance group-hover:text-accent-700">{p.title}</H>
+      <H className="mt-4 font-display text-xl leading-snug font-medium text-brand-900 group-hover:text-accent-700">{p.title}</H>
       {p.location && (
         <p className="mt-1 flex items-center gap-1 text-sm text-muted">
           <MapPin className="size-3.5" aria-hidden /> {p.location}
