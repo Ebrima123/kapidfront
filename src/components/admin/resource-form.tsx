@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { api, ApiError } from "@/lib/api-client";
+import { compressImage } from "@/lib/compress-image";
 import { ErrorBox } from "./ui";
 
 export type Option = { value: string; label: string };
@@ -117,7 +118,11 @@ export function FieldInput({
             type="file"
             accept="image/*"
             className="text-sm file:mr-3 file:rounded-full file:border-0 file:bg-sand file:px-3 file:py-1.5 file:text-xs file:font-semibold"
-            onChange={(e) => e.target.files?.[0] && onChange(e.target.files[0])}
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              // Large phone photos are shrunk before upload (see compressImage).
+              if (file) onChange(await compressImage(file));
+            }}
           />
         </div>
       );

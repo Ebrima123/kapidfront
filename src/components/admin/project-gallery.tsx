@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { Loader2, Trash2, Upload } from "lucide-react";
 import { api } from "@/lib/api-client";
+import { compressImage } from "@/lib/compress-image";
 import type { ProjectImage } from "@/lib/types";
 import { useApi } from "@/lib/use-api";
 import { ErrorBox } from "./ui";
@@ -14,21 +15,28 @@ export function ProjectGallery({ projectId }: { projectId: number }) {
     page_size: 200,
   });
   const images = Array.isArray(data) ? data : (data?.results ?? []);
-  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const uploading = progress !== null;
 
-  async function upload(files: FileList) {
-    setUploading(true);
+  async function upload(fileList: FileList) {
+    const files = Array.from(fileList);
+    setUploadError(null);
     try {
-      for (const [i, file] of Array.from(files).entries()) {
+      for (const [i, original] of files.entries()) {
+        setProgress(`Uploading ${i + 1} of ${files.length}…`);
+        const file = await compressImage(original);
         const form = new FormData();
         form.append("project", String(projectId));
         form.append("image", file);
         form.append("order", String(images.length + i));
         await api("cms/project-images", { method: "POST", form });
       }
-      reload();
+    } catch (e) {
+      setUploadError(`Upload failed: ${(e as Error).message}`);
     } finally {
-      setUploading(false);
+      setProgress(null);
+      reload();
     }
   }
 
@@ -44,18 +52,22 @@ export function ProjectGallery({ projectId }: { projectId: number }) {
         <h3 className="font-semibold">Gallery photos</h3>
         <label className="btn btn-ghost btn-sm cursor-pointer">
           {uploading ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
-          Add photos
+          {progress ?? "Add photos"}
           <input
             type="file"
             accept="image/*"
             multiple
             className="sr-only"
             disabled={uploading}
-            onChange={(e) => e.target.files?.length && upload(e.target.files)}
+            onChange={(e) => {
+              if (e.target.files?.length) upload(e.target.files);
+              e.target.value = "";
+            }}
           />
         </label>
       </div>
       {error && <ErrorBox message={error} />}
+      {uploadError && <ErrorBox message={uploadError} />}
       {images.length === 0 ? (
         <p className="text-sm text-muted">No gallery photos yet.</p>
       ) : (
