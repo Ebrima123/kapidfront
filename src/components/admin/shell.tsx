@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
@@ -14,7 +15,6 @@ import {
   LogOut,
   Menu,
   MessageSquareQuote,
-  PaintRoller,
   Settings,
   Users,
   Wrench,
@@ -89,9 +89,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const nav = (
     <nav className="flex h-full flex-col gap-6 p-4">
       <Link href="/admin" className="flex items-center gap-2 px-2 font-display text-lg font-semibold text-white">
-        <span className="grid size-8 place-items-center rounded-lg bg-accent-500">
-          <PaintRoller className="size-4" />
-        </span>
+        <Image src="/brand/kapid-mark-white.png" alt="" width={210} height={160} className="h-7 w-auto" />
         Kapid Admin
       </Link>
       <Suspense fallback={<NavSections pathname="" onNavigate={close} />}>

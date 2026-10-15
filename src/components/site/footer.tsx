@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
 import type { SiteSettings } from "@/lib/types";
-import { Logo } from "./header";
+import Image from "next/image";
 import { whatsappHref } from "@/lib/whatsapp";
 import { SocialLinks } from "./social-links";
 import { WhatsAppIcon } from "./whatsapp";
@@ -25,7 +25,14 @@ export function Footer({ settings }: { settings: SiteSettings }) {
     <footer className="bg-moulding mt-auto bg-brand-950 text-[15px] text-white/70">
       <div className="container-x grid gap-12 py-16 md:grid-cols-12 md:py-20">
         <div className="md:col-span-5">
-          <Logo name={settings.company_name} inverted />
+          {/* The full logo, in white for the navy footer */}
+          <Image
+            src="/brand/kapid-logo-white.png"
+            alt="Kapid – Addijaton’s Artisan Paint & Interior Designs"
+            width={827}
+            height={600}
+            className="h-32 w-auto"
+          />
           <p className="mt-6 max-w-sm leading-relaxed">
             Interior and exterior painting and decorative finishes for homes, businesses and new builds across {area}.
           </p>

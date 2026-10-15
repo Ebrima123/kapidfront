@@ -76,9 +76,11 @@ export default function SiteSettingsPage() {
               fields={g.fields}
               initial={data}
               onSubmit={async (values) => {
-                setData(await api<SiteSettings>("cms/settings", { method: "PATCH", ...toPayload(g.fields, values) }));
+                const updated = await api<SiteSettings>("cms/settings", { method: "PATCH", ...toPayload(g.fields, values) });
+                setData(updated);
                 setSaved(g.title);
                 setTimeout(() => setSaved(null), 2500);
+                return updated; // the form then shows the uploaded image as the current one
               }}
             />
           </section>

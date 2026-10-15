@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, Newsreader } from "next/font/google";
-import Script from "next/script";
 import { REVEAL_BOOT_SCRIPT } from "@/lib/reveal";
 import { SITE_URL } from "@/lib/config";
 import "./globals.css";
@@ -21,13 +20,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // The public site's reveal script adds a class to <html> before hydration.
     <html lang="en" className={`${inter.variable} ${newsreader.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="flex min-h-full flex-col font-sans">
-        {/* Hides scroll-reveal content before first paint; undone after 3s if the public site's observer never starts. */}
-        <Script id="reveal-boot" strategy="beforeInteractive">
-          {REVEAL_BOOT_SCRIPT}
-        </Script>
-        {children}
-      </body>
+      <head>
+        {/* Hides scroll-reveal content before first paint; undone after 3s if the public site's observer never starts.
+            A plain inline script on purpose: next/script's beforeInteractive waits for the Next.js runtime, which
+            is after first paint, so content would show and then vanish. */}
+        <script id="reveal-boot" dangerouslySetInnerHTML={{ __html: REVEAL_BOOT_SCRIPT }} />
+      </head>
+      <body className="flex min-h-full flex-col font-sans">{children}</body>
     </html>
   );
 }

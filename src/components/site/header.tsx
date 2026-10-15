@@ -1,9 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import { PaintRoller, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import { WhatsAppIcon } from "./whatsapp";
 
 const NAV = [
@@ -43,16 +44,19 @@ function ActiveNavLinks(props: { mobile?: boolean }) {
   return <NavLinks pathname={usePathname()} {...props} />;
 }
 
-/** Wordmark: "KAPID" in spaced serif caps, the rest of the name as a small line beneath. */
+/** The house-and-roller mark from the company logo, then "KAPID" in spaced serif caps with the rest of the name beneath. */
 export function Logo({ name, inverted = false }: { name: string; inverted?: boolean }) {
   const [first, ...rest] = name.split(" ");
   return (
     <span className="flex items-center gap-3">
-      <span
-        className={`grid size-10 shrink-0 place-items-center rounded-[5px] ${inverted ? "bg-accent-600 text-white" : "bg-brand-900 text-white"}`}
-      >
-        <PaintRoller className="size-[18px]" aria-hidden />
-      </span>
+      <Image
+        src={inverted ? "/brand/kapid-mark-white.png" : "/brand/kapid-mark.png"}
+        alt=""
+        width={210}
+        height={160}
+        priority={!inverted}
+        className="h-10 w-auto shrink-0 md:h-11"
+      />
       <span className="flex flex-col leading-none">
         <span
           className={`font-display text-[22px] font-semibold tracking-[0.14em] uppercase ${inverted ? "text-white" : "text-brand-900"}`}

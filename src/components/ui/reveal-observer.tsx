@@ -103,7 +103,10 @@ export function RevealObserver() {
     if (process.env.NODE_ENV !== "production") (window as unknown as { __kapidReveal: typeof play }).__kapidReveal = play;
     // Reduced motion: the CSS never hides anything, so there is nothing to play.
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    document.documentElement.classList.add("reveal-ready");
+    // The boot script hides content before first paint. If it didn't run, or gave up
+    // after its timeout, the page is already showing everything: hiding it now would
+    // make visible content (like the hero image) vanish, so skip the animations.
+    if (!document.documentElement.classList.contains("reveal-ready")) return;
 
     const seen = new WeakSet<Element>();
     const io = new IntersectionObserver(

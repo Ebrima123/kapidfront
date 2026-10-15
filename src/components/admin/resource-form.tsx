@@ -1,10 +1,9 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element -- previews of media served by the API host */
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { api, ApiError } from "@/lib/api-client";
-import { compressImage } from "@/lib/compress-image";
+import { ImageInput } from "./image-input";
 import { ErrorBox } from "./ui";
 
 export type Option = { value: string; label: string };
@@ -109,23 +108,7 @@ export function FieldInput({
         </label>
       );
     case "image":
-      return (
-        <div className="flex items-center gap-3">
-          {typeof value === "string" && value && (
-            <img src={value} alt="" className="size-14 rounded-lg border border-line object-cover" />
-          )}
-          <input
-            type="file"
-            accept="image/*"
-            className="text-sm file:mr-3 file:rounded-full file:border-0 file:bg-sand file:px-3 file:py-1.5 file:text-xs file:font-semibold"
-            onChange={async (e) => {
-              const file = e.target.files?.[0];
-              // Large phone photos are shrunk before upload (see compressImage).
-              if (file) onChange(await compressImage(file));
-            }}
-          />
-        </div>
-      );
+      return <ImageInput id={field.name} label={field.label} value={value} onChange={onChange} />;
     case "number":
     case "money":
       return (
@@ -160,7 +143,8 @@ export function ResourceForm({
 }: {
   fields: FieldDef[];
   initial: Values;
-  onSubmit: (values: Values) => Promise<void>;
+  /** May return the saved record; its values then replace the form's (e.g. uploaded image URLs). */
+  onSubmit: (values: Values) => Promise<void | Values>;
   onCancel?: () => void;
   submitLabel?: string;
 }) {
@@ -175,7 +159,11 @@ export function ResourceForm({
     setErrors({});
     setFormError(null);
     try {
-      await onSubmit(values);
+      const saved = await onSubmit(values);
+      if (saved && typeof saved === "object") {
+        const names = new Set(fields.map((f) => f.name));
+        setValues((v) => ({ ...v, ...Object.fromEntries(Object.entries(saved).filter(([k]) => names.has(k))) }));
+      }
     } catch (err) {
       if (err instanceof ApiError && err.status === 400) {
         const known = new Set(fields.map((f) => f.name));
