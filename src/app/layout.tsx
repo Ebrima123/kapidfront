@@ -6,8 +6,9 @@ const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: { default: "Kapid Painting", template: "%s | Kapid Painting" },
-  description: "Interior, exterior and commercial painting & decorating.",
+  title: { default: "Kapid Painting Company", template: "%s | Kapid Painting Company" },
+  description:
+    "Kapid Painting Company: interior, exterior and new-build painting and decorating in The Gambia. Excellence isn't built in one coat.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

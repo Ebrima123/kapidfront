@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { QuoteForm } from "@/components/site/quote-form";
 import { PageHero } from "@/components/site/sections";
+import { SocialLinks } from "@/components/site/social-links";
 import { getServices, getSettings } from "@/lib/cms";
 
 export const metadata: Metadata = { title: "Contact & free quote" };
@@ -43,6 +44,12 @@ export default async function ContactPage() {
           )}
           {settings.service_area && (
             <p className="text-sm text-muted">Proudly serving {settings.service_area}.</p>
+          )}
+          {(settings.facebook_url || settings.tiktok_url || settings.instagram_url) && (
+            <div>
+              <p className="label">See our latest work</p>
+              <SocialLinks settings={settings} className="text-brand-700" />
+            </div>
           )}
         </aside>
         <div className="card p-6 sm:p-8">

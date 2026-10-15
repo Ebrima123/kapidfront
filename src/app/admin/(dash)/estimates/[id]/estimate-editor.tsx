@@ -236,7 +236,7 @@ export function EstimateEditor({ id }: { id: string }) {
       <article className="hidden text-sm print:block">
         <header className="flex justify-between border-b pb-6">
           <div>
-            <p className="font-display text-2xl font-semibold">{company?.company_name ?? "Kapid Painting"}</p>
+            <p className="font-display text-2xl font-semibold">{company?.company_name ?? "Kapid Painting Company"}</p>
             <p>{company?.address}</p>
             <p>{[company?.phone, company?.email].filter(Boolean).join(" · ")}</p>
           </div>

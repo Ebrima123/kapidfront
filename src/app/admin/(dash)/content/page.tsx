@@ -38,6 +38,7 @@ const GROUPS: { title: string; fields: FieldDef[] }[] = [
       { name: "service_area", label: "Service area", placeholder: "e.g. the city and surrounding areas" },
       { name: "opening_hours", label: "Opening hours", placeholder: "Mon–Sat, 8am–6pm" },
       { name: "facebook_url", label: "Facebook URL", type: "url" },
+      { name: "tiktok_url", label: "TikTok URL", type: "url" },
       { name: "instagram_url", label: "Instagram URL", type: "url" },
     ],
   },

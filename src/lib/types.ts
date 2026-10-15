@@ -14,6 +14,7 @@ export type SiteSettings = {
   opening_hours: string;
   facebook_url: string;
   instagram_url: string;
+  tiktok_url: string;
   years_experience: number;
   projects_completed: number;
 };

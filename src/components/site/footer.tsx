@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import type { SiteSettings } from "@/lib/types";
+import { SocialLinks } from "./social-links";
 
 export function Footer({ settings }: { settings: SiteSettings }) {
   return (
@@ -10,6 +11,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
           <p className="font-display text-2xl text-white">{settings.company_name}</p>
           <p className="mt-2 text-sm">{settings.tagline}</p>
           {settings.service_area && <p className="mt-4 text-sm">Serving {settings.service_area}</p>}
+          <SocialLinks settings={settings} className="mt-5" />
         </div>
         <div className="space-y-2 text-sm">
           <p className="font-semibold text-white">Get in touch</p>

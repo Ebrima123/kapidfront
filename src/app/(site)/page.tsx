@@ -11,7 +11,7 @@ import {
 import { Cover } from "@/components/ui/cover";
 import { getFaqs, getProjects, getServices, getSettings, getTestimonials } from "@/lib/cms";
 
-const PROMISES = ["Free, itemised quotes", "Fully insured & guaranteed", "Clean, tidy job sites"];
+const PROMISES = ["Free, itemised quotes", "Homes, businesses & new builds", "The latest decorative styles"];
 
 export default async function HomePage() {
   const [settings, services, projects, testimonials, faqs] = await Promise.all([
@@ -26,7 +26,7 @@ export default async function HomePage() {
   return (
     <>
       <section className="relative overflow-hidden">
-        <div className="container-x grid items-center gap-12 py-16 md:grid-cols-2 md:py-24">
+        <div className="container-x grid items-center gap-10 pt-4 pb-8 md:grid-cols-2 md:pt-4 md:pb-6">
           <div>
             <p className="eyebrow">{settings.tagline}</p>
             <h1 className="mt-4 font-display text-5xl leading-[1.05] font-semibold text-balance sm:text-6xl">
@@ -54,23 +54,29 @@ export default async function HomePage() {
               src={settings.hero_image}
               alt="Freshly painted interior"
               swatch="cabinets"
-              className="aspect-[4/5] w-full rounded-[2rem] shadow-2xl shadow-brand-900/20"
+              className="aspect-[4/5] w-full rounded-[2rem] md:aspect-[1/1] shadow-2xl shadow-brand-900/20"
             />
-            <div className="card absolute -bottom-6 -left-4 flex gap-6 px-6 py-4 shadow-xl sm:-left-8">
-              <div>
-                <p className="font-display text-3xl font-semibold text-brand-700">{settings.years_experience}+</p>
-                <p className="text-xs text-muted">Years experience</p>
+            {(settings.years_experience > 0 || settings.projects_completed > 0) && (
+              <div className="card absolute -bottom-6 -left-4 flex gap-6 px-6 py-4 shadow-xl sm:-left-8">
+                {settings.years_experience > 0 && (
+                  <div>
+                    <p className="font-display text-3xl font-semibold text-brand-700">{settings.years_experience}+</p>
+                    <p className="text-xs text-muted">Years experience</p>
+                  </div>
+                )}
+                {settings.projects_completed > 0 && (
+                  <div>
+                    <p className="font-display text-3xl font-semibold text-brand-700">{settings.projects_completed}+</p>
+                    <p className="text-xs text-muted">Projects completed</p>
+                  </div>
+                )}
               </div>
-              <div>
-                <p className="font-display text-3xl font-semibold text-brand-700">{settings.projects_completed}+</p>
-                <p className="text-xs text-muted">Projects completed</p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
 
-      <section className="container-x py-16">
+      <section className="container-x pt-6 pb-16">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <SectionHeading eyebrow="What we do" title="Painting services for every surface" />
           <Link href="/services" className="text-sm font-semibold text-brand-600 hover:underline">
